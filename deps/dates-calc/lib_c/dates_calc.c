@@ -194,7 +194,7 @@ dc_success dc_round_date (dc_date *ret, const dc_date_rounding rnd, const dc_dat
 
 void add_dates_days (dc_date *ret, const dc_date *d, const long int days) {
   unsigned long int days_in_d_month;
-  unsigned long int day_num;
+  long int day_num;
   /* Hello, dear reader! Buckle up because it will be a hard ride. The first
      thing to do here is to retrieve how many days there are in the current
      month of [d]. */
@@ -202,7 +202,7 @@ void add_dates_days (dc_date *ret, const dc_date *d, const long int days) {
   /* Now, we case analyze of the situation. To do that, we add the current days
      of the month with [days], and see what happens. Beware, [days] is algebraic
      and can be negative! */
-  day_num = d->day + days;
+  day_num = (long int)d->day + days;
   if (day_num < 1) {
     /* we substracted too many days and the current month can't handle it. So we
        warp to the previous month and let a recursive call handle the situation
@@ -214,7 +214,7 @@ void add_dates_days (dc_date *ret, const dc_date *d, const long int days) {
     /* What remains to be substracted (as [days] is negative) has to be
        diminished by the number of days of the date in the current month. */
     add_dates_days(ret, &d1, days + d->day);
-  } else if (days_in_d_month < day_num) {
+  } else if ((long int)days_in_d_month < day_num) {
     /* Here there is an overflow : you have added too many days and the current
        month cannot handle them any more. The strategy here is to fill the
        current month, and let the next month handle the situation via a
