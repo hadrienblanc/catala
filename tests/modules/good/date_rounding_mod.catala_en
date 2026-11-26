@@ -1,0 +1,27 @@
+> Module Date_rounding_mod
+
+A module whose scopes and function add one month to a date, with or without
+a rounding mode of their own.
+
+```catala-metadata
+declaration scope NoRounding:
+  input d content date
+  output r content date
+
+declaration scope RoundDown:
+  input d content date
+  output r content date
+
+declaration add_one_month content date
+  depends on d content date
+  equals d + 1 month
+```
+
+```catala
+scope NoRounding:
+  definition r equals d + 1 month
+
+scope RoundDown:
+  date round down
+  definition r equals d + 1 month
+```

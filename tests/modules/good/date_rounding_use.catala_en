@@ -1,0 +1,43 @@
+> Using Date_rounding_mod
+
+The date rounding mode is lexical: it applies to the date computations
+written in the scope that declares it, not to the scopes or functions that
+this scope calls from another module.
+
+```catala
+#[test]
+declaration scope CalleeRounds:
+  output r content date
+
+scope CalleeRounds:
+  definition r equals
+    (output of Date_rounding_mod.RoundDown with { -- d: |2024-01-31| }).r
+  assertion r = |2024-02-29|
+
+#[test]
+declaration scope BothRound:
+  output r content date
+
+scope BothRound:
+  date round up
+  # The callee's rounding mode applies, not the caller's
+  definition r equals
+    (output of Date_rounding_mod.RoundDown with { -- d: |2024-01-31| }).r
+  assertion r = |2024-02-29|
+
+#[test]
+declaration scope CallerRounds:
+  output r content date
+
+scope CallerRounds:
+  date round up
+  definition r equals |2024-01-31| + 1 month
+  assertion r = |2024-03-01|
+```
+
+```catala-test-cli
+$ catala test-scope BothRound
+┌─[RESULT]─ BothRound ─
+│ r = |2024-02-29|
+└─
+```
