@@ -8,5 +8,7 @@ def round_to_decimal(variable: Money, n_decimal: Integer) -> Money:
         return Money(Integer(Money(variable * Integer(10)).round()) / Integer(10))
     else:
         pow_10 = Integer(pow(10, -int(n_decimal)))
-        r: Money = Money(Integer(variable / pow_10)).round()
+        cents = int(variable)
+        truncated = Money(abs(cents) // int(pow_10) * (-1 if cents < 0 else 1))
+        r: Money = Money(Integer(truncated)).round()
         return Money(r * pow_10)
