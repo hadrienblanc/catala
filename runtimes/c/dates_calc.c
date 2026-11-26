@@ -142,8 +142,10 @@ void dc_add_months(dc_date *ret, const dc_date *d, const long int months) {
      calculations */
   /*  assert (1 <= d->month && d->month <= 12); */
   ret->day = 1;
-  ret->month = (month >= 0 ? month % 12 : month % 12 + 12) + 1;
-  ret->year = d->year + (month >= 0 ? month / 12 : month / 12 - 1);
+  /* C's [%] and [/] truncate toward zero: round toward minus infinity, so
+     that subtracting a multiple of 12 months keeps the same month */
+  ret->month = (month % 12 + 12) % 12 + 1;
+  ret->year = d->year + month / 12 - (month % 12 < 0);
 }
 
 /* If the date is valid, does nothing. We expect the month number to be always

@@ -1,0 +1,38 @@
+## Subtracting a multiple of 12 months
+
+```catala
+#[test]
+declaration scope SubMonths:
+  output one_year content date
+  output seventeen_months content date
+  output two_years content date
+  output one_month content date
+  output addition content date
+  output in_years content date
+
+scope SubMonths:
+  definition one_year equals |2024-01-15| - 12 month
+  assertion one_year = |2023-01-15|
+  definition seventeen_months equals |2024-06-15| - 17 month
+  assertion seventeen_months = |2023-01-15|
+  definition two_years equals |2024-01-15| - 24 month
+  assertion two_years = |2022-01-15|
+  definition one_month equals |2024-01-15| - 1 month
+  assertion one_month = |2023-12-15|
+  definition addition equals |2024-01-15| + 12 month
+  assertion addition = |2025-01-15|
+  definition in_years equals |2024-03-31| - 1 year
+  assertion in_years = |2023-03-31|
+```
+
+```catala-test-cli
+$ catala test-scope SubMonths
+┌─[RESULT]─ SubMonths ─
+│ one_year = |2023-01-15|
+│ seventeen_months = |2023-01-15|
+│ two_years = |2022-01-15|
+│ one_month = |2023-12-15|
+│ addition = |2025-01-15|
+│ in_years = |2023-03-31|
+└─
+```
