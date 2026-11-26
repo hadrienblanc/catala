@@ -1,0 +1,51 @@
+> Using Date_rounding_mod
+
+The caller's date rounding mode is not inherited by what it calls from a
+module: an ambiguous computation in the callee is still an error.
+
+```catala
+declaration scope CallsScope:
+  output r content date
+
+scope CallsScope:
+  date round up
+  definition r equals
+    (output of Date_rounding_mod.NoRounding with { -- d: |2024-01-31| }).r
+
+declaration scope CallsFunction:
+  output r content date
+
+scope CallsFunction:
+  date round up
+  definition r equals Date_rounding_mod.add_one_month of |2024-01-31|
+```
+
+```catala-test-cli
+$ catala test-scope CallsScope
+┌─[ERROR]─
+│
+│  During evaluation: ambiguous date computation with no rounding mode
+│  specified.
+│
+├─➤ tests/modules/good/date_rounding_mod.catala_en:9.10-11:
+│   │
+│ 9 │   output r content date
+│   │          ‾
+└─
+#return code 123#
+```
+
+```catala-test-cli
+$ catala test-scope CallsFunction
+┌─[ERROR]─
+│
+│  During evaluation: ambiguous date computation with no rounding mode
+│  specified.
+│
+├─➤ tests/modules/good/date_rounding_mod.catala_en:17.10-21:
+│    │
+│ 17 │   equals d + 1 month
+│    │          ‾‾‾‾‾‾‾‾‾‾‾
+└─
+#return code 123#
+```
