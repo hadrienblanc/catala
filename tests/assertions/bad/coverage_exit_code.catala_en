@@ -1,0 +1,53 @@
+## Exit code with `--code-coverage`
+
+A failing scope must give a failing exit code even when it is not the last
+scope that runs.
+
+```catala
+declaration scope Fails:
+  output x content integer
+
+scope Fails:
+  definition x equals 1
+  assertion x = 2
+
+declaration scope Passes:
+  output y content integer
+
+scope Passes:
+  definition y equals 1
+```
+
+```catala-test-cli
+$ catala interpret --code-coverage -s Fails -s Passes
+┌─[ERROR]─
+│
+│  Assertion failed: 1 ≠ 2
+│
+├─➤ tests/assertions/bad/coverage_exit_code.catala_en:12.3-18:
+│    │
+│ 12 │   assertion x = 2
+│    │   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+└─ Exit code with `--code-coverage`
+┌─[RESULT]─ Passes ─
+│ y = 1
+└─
+#return code 123#
+```
+
+```catala-test-cli
+$ catala interpret -s Fails -s Passes
+┌─[ERROR]─
+│
+│  Assertion failed: 1 ≠ 2
+│
+├─➤ tests/assertions/bad/coverage_exit_code.catala_en:12.3-18:
+│    │
+│ 12 │   assertion x = 2
+│    │   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+└─ Exit code with `--code-coverage`
+┌─[RESULT]─ Passes ─
+│ y = 1
+└─
+#return code 123#
+```

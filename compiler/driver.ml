@@ -826,6 +826,7 @@ module Commands = struct
             in
             print_interpretation_results options ~quiet interp scope
               prg.decl_ctx
+            && success
           else
             let interp () =
               ( Interpreter.interpret_program_dcalc ?input:scope_input prg scope,
