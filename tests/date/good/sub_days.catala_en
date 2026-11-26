@@ -1,0 +1,34 @@
+## Subtracting days across month boundaries
+
+```catala
+#[test]
+declaration scope SubDays:
+  output previous_month content date
+  output leap_day content date
+  output previous_year content date
+  output many_months content date
+  output addition content date
+
+scope SubDays:
+  definition previous_month equals |2024-03-15| - 20 day
+  assertion previous_month = |2024-02-24|
+  definition leap_day equals |2024-03-01| - 1 day
+  assertion leap_day = |2024-02-29|
+  definition previous_year equals |2024-01-10| - 15 day
+  assertion previous_year = |2023-12-26|
+  definition many_months equals |2024-03-15| - 400 day
+  assertion many_months = |2023-02-09|
+  definition addition equals |2024-03-15| + 20 day
+  assertion addition = |2024-04-04|
+```
+
+```catala-test-cli
+$ catala test-scope SubDays
+┌─[RESULT]─ SubDays ─
+│ previous_month = |2024-02-24|
+│ leap_day = |2024-02-29|
+│ previous_year = |2023-12-26|
+│ many_months = |2023-02-09|
+│ addition = |2024-04-04|
+└─
+```
