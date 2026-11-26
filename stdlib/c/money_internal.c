@@ -13,8 +13,12 @@ CATALA_MONEY MoneyInternal__round_to_decimal(CATALA_MONEY variable, CATALA_INT n
       return o_div_mon_int(NULL, m, ten);
     } else {
       mpz_ptr pow_ten = catala_malloc(sizeof(__mpz_struct));
+      mpz_ptr truncated = catala_malloc(sizeof(__mpz_struct));
+      mpz_init(pow_ten);
+      mpz_init(truncated);
       mpz_pow_ui(pow_ten, ten, -nth_int);
-      return o_mult_mon_int(o_round_mon(o_div_mon_int(NULL, variable, pow_ten)), pow_ten);
+      mpz_tdiv_q(truncated, variable, pow_ten);
+      return o_mult_mon_int(o_round_mon(truncated), pow_ten);
     }
   }
 }
