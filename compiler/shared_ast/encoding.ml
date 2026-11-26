@@ -91,7 +91,8 @@ let money_encoding : Val.t encoding =
         (function
           | Val.V (Money, z) -> try_option (fun () -> Z.to_float z /. 100.)
           | _ -> assert false)
-        (fun i -> Val.V (Money, Z.of_float (i *. 100.)));
+        (fun i ->
+          Val.V (Money, Runtime.money_of_decimal (Runtime.decimal_of_float i)));
       case string
         (function
           | Val.V (Money, z) ->
