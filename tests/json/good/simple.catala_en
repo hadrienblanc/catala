@@ -44,3 +44,30 @@ $ catala test-scope S --input {"x":"999999999","y":true,"z":"123"}
 │ r = $123.00
 └─
 ```
+
+The money literal is read as a float, but its cents must be rounded, not
+truncated: `1.15` is `114.99999999999999` cents as a float.
+
+```catala-test-cli
+$ catala test-scope S --input {"x":1,"y":true,"z":1.15}
+┌─[RESULT]─ S ─
+│ r = $1.15
+└─
+```
+
+```catala-test-cli
+$ catala test-scope S --input {"x":1,"y":true,"z":-4.35}
+┌─[RESULT]─ S ─
+│ r = -$4.35
+└─
+```
+
+Large amounts too: multiplying the float by 100 before rounding adds a
+rounding error, which is already more than half a cent above 2^45 units.
+
+```catala-test-cli
+$ catala test-scope S --input {"x":1,"y":true,"z":35184372088832.09}
+┌─[RESULT]─ S ─
+│ r = $35,184,372,088,832.09
+└─
+```
